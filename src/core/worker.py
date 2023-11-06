@@ -17,11 +17,21 @@ import pandas as pd
 import json
 
 class Worker:
-    def __init__(self, cik, ignore_failure):
+    #
+    #   Constructor method of the class
+    #   @params
+    #       cik: str - CIK of the company
+    #       ignore_failure: int - Indicates if in case of failed retrieval it kills the thread.
+    #                       Not Ignore: 0
+    #                       Ignore: 1
+    #       form: str - Available filing forms are 10-Q, 10-K,8-K, 20-F, 40-F, 6-K, and their variants. 
+    #
+    def __init__(self, cik:str, ignore_failure:int, form:str):
         self.headers = { 'User-Agent' : "something@gmail.com" } 
         self.cf_url = 'https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json'
         self.cik = cik
         self.ignore_failure = ignore_failure
+        self.form = form
     
     #
     #   Converts the CIK to the required format given by the specs of the SEC.
@@ -100,6 +110,8 @@ class Worker:
             retrieval = self.retrieve_(self.cik, self.ignore_failure)
             formated_us_gaap = self.format_fact_(retrieval,'us-gaap')
             formated_dei = self.format_fact_(retrieval,'dei')
-            return pd.concat([formated_dei, formated_us_gaap], axis=0)
+            df = pd.concat([formated_dei, formated_us_gaap], axis=0)
+            return df[df['form'] == self.form]
         except:
+            print('[*] Error performing full_retrieval_')
             return pd.DataFrame()

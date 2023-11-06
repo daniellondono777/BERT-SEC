@@ -90,8 +90,10 @@ class Worker:
             shares = pd.DataFrame(self.find_arrays(concept[k]))
             shares['label'] = k
             concept_dataframes.append(shares)
-        return concept_dataframes
         
+        df = pd.concat(concept_dataframes, ignore_index=True)
+        df.to_excel('tesla_facts.xlsx', index=False)
+        return df
 
 
 i1 = Worker()
@@ -99,4 +101,4 @@ retrieval = i1.retrieve_('1318605', 1)
 print(i1.format_fact_(
                     i1.retrieve_('1318605', 1)
                     , 'us-gaap'))
-# print(retrieval)
+# print(retrieval) 0001318605

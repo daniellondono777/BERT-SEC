@@ -17,16 +17,11 @@ import pandas as pd
 import json
 
 class Worker:
-    def __init__(self):
-        self.headers = { 'User-Agent' : "something@gmail.com" } # Pasar a variable de ambiente
+    def __init__(self, cik, ignore_failure):
+        self.headers = { 'User-Agent' : "something@gmail.com" } 
         self.cf_url = 'https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json'
-        self.cik_codes_json = ''
-        try:
-            self.cik_codes_json = requests.get('https://www.sec.gov/files/company_tickers.json').json()
-        except:
-            print('[*] Error Fetching CIK from sec.gov/files/company_tickers.json')
-            exit(0)
-        
+        self.cik = cik
+        self.ignore_failure = ignore_failure
     
     #
     #   Converts the CIK to the required format given by the specs of the SEC.
@@ -82,7 +77,7 @@ class Worker:
     #       facts: dict - 'facts' dictionary withing retrieved JSON
     #       fact: str - either 'us-gaap' or 'dei'
     #
-    def format_fact_(self, facts, fact):
+    def format_fact_(self, facts, fact)-> pd.DataFrame:
         concept = facts[fact]
         _keys = list(concept.keys())
         concept_dataframes = []
@@ -92,13 +87,19 @@ class Worker:
             concept_dataframes.append(shares)
         
         df = pd.concat(concept_dataframes, ignore_index=True)
-        df.to_excel('tesla_facts.xlsx', index=False)
         return df
 
-
-i1 = Worker()
-retrieval = i1.retrieve_('1318605', 1)
-print(i1.format_fact_(
-                    i1.retrieve_('1318605', 1)
-                    , 'us-gaap'))
-# print(retrieval) 0001318605
+    #
+    #   Performs the full process for obtaining a companies filings. Formats and concatenates the 
+    #   us-gaap and dei data. 
+    #
+    #   Returns dataframe with the end date, value, account number, fiscal year, fiscal period, date filled, frame, label, and start date of filing. 
+    #
+    def full_retrieval_(self)-> pd.DataFrame:
+        try:
+            retrieval = self.retrieve_(self.cik, self.ignore_failure)
+            formated_us_gaap = self.format_fact_(retrieval,'us-gaap')
+            formated_dei = self.format_fact_(retrieval,'dei')
+            return pd.concat([formated_dei, formated_us_gaap], axis=0)
+        except:
+            return pd.DataFrame()

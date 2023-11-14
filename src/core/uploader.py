@@ -41,5 +41,9 @@ class Uploader:
         table = self.pivot_table_().fillna(0)
         return table
     
-
+    #
+    #
+    #
+    def upload_(self)-> None:
+        pass
 

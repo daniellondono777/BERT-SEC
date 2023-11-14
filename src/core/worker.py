@@ -26,7 +26,7 @@ class Worker:
     #                       Ignore: 1
     #       form: str - Available filing forms are 10-Q, 10-K,8-K, 20-F, 40-F, 6-K, and their variants. 
     #
-    def __init__(self, cik:str, ignore_failure:int, form:str):
+    def __init__(self, cik: str, ignore_failure: int, form: str):
         self.headers = { 'User-Agent' : "something@gmail.com" } 
         self.cf_url = 'https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json'
         self.cik = cik

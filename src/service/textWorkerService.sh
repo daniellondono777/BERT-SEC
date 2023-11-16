@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ##############################################################################################################################   
 #
 #   Daemon - checks if the tmp/text_worker_data folder has files, if it does, then it runs its respective python script.

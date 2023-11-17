@@ -30,7 +30,6 @@ run(){
 
     if [ "$first_file" ]; then
         cat "$directory/$first_file" | grep ".txt" > "$directory"/results.txt
-        # python3 /src/core/samples.py "$directory""/results.txt"
         PROJECT_PATH=$(git rev-parse --show-toplevel)
         python3 $PROJECT_PATH/src/core/text_uploader.py "$directory"/results.txt
     else

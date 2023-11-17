@@ -8,6 +8,8 @@
 ##############################################################################################################################
 
 import pandas as pd
+from pydrive.auth import GoogleAuth 
+from pydrive.drive import GoogleDrive
 
 
 class Uploader:
@@ -17,7 +19,7 @@ class Uploader:
     #   @params
     #       df: Dataframe - Dataframe returned from full_retrieval
     #
-    def __init__(self, df):
+    def __init__(self, df: pd.DataFrame):
         self.df = df
     
     #

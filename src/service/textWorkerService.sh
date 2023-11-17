@@ -15,25 +15,27 @@ PROJECT_ROOT+=$download_folder
 
 
 #
-#   Run the its respective python script whenever it finds a file
+#   Filters the urls that will be uploaded, retrieves the CIK and the url of the filing as long as it matches the parameter
 #
 
+form=$1
+
 run(){
-    local form=$1
-    local year=$2
 
-    output_folder='./tmp/feeding_data/'
-    output_file="$output_folder/data_"$year".txt"
+    directory="tmp/text_worker_data"
+    file_to_check="$2"
+    script_to_run="$3"
 
-    if [ -n "$(find "$PROJECT_ROOT" -maxdepth 1 -type f)" ]; then
-        files=($(find "$PROJECT_ROOT" -maxdepth 1 -type f))
-        for element in "${files[@]}"; do
-            cat "$element" | grep -w "$form" >> "$output_file"
-        done
+    first_file="$(ls -A "$directory" | head -n 1)"
+
+    if [ "$first_file" ]; then
+        cat "$directory/$first_file" | grep ".txt" > "$directory"/results.txt
+        # python3 /src/core/samples.py "$directory""/results.txt"
+        PROJECT_PATH=$(git rev-parse --show-toplevel)
+        python3 $PROJECT_PATH/src/core/text_uploader.py "$directory"/results.txt
     else
-        echo "The folder is empty or does not exist."
-        exit 0
+        exit 1
     fi
 }
 
-run '8-K' '2000'
+run

@@ -28,6 +28,7 @@ class Worker:
     #
     def __init__(self, cik: str, ignore_failure: int, form: str):
         self.headers = { 'User-Agent' : "something@gmail.com" } 
+        # self.headers = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36' }
         self.cf_url = 'https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json'
         self.cik = cik
         self.ignore_failure = ignore_failure

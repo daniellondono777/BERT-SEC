@@ -33,7 +33,8 @@ def main():
     for cik in ciks:
         instance_df = Worker(str(cik), 1, form).full_retrieval_()
         upload = Uploader(instance_df)
-        upload.upload_()
+        upload.upload_() # En este punto, se suben los financial statements TABULADOS
+                         # AHORA, cuando termine este ciclo, se llama al subprocess para que corra el textWorkerService.sh
         time.sleep(10)
     # for cik in ciks: 
     # worker_instance = Worker(cik, form, year) .full_retrieval_

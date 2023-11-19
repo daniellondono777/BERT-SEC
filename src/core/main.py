@@ -29,11 +29,11 @@ def main():
     form = sys.argv[0]
     # year = sys.argv[1]
 
-    ciks = companies.sample(10)['cik_str'].to_list()
+    ciks = companies.sample(10)['cik_str'].to_list() # We first try with 10 companies just for testing purposes, here you input the number you desire.  
     for cik in ciks:
         instance_df = Worker(str(cik), 1, form).full_retrieval_()
-        upload = Uploader(instance_df)
-        upload.upload_() # En este punto, se suben los financial statements TABULADOS
+        uploader = Uploader(instance_df, cik)
+        uploader.upload_() # En este punto, se suben los financial statements TABULADOS
                          # AHORA, cuando termine este ciclo, se llama al subprocess para que corra el textWorkerService.sh
         time.sleep(10)
     # for cik in ciks: 

@@ -29,9 +29,10 @@ run(){
     first_file="$(ls -A "$directory" | head -n 1)"
 
     if [ "$first_file" ]; then
-        cat "$directory/$first_file" | grep ".txt" > "$directory"/results.txt
+        cat "$directory/$first_file" | grep -E "\.txt.*10-K|10-K.*\.txt" > "$directory"/results.txt
         PROJECT_PATH=$(git rev-parse --show-toplevel)
         python3 $PROJECT_PATH/src/core/text_uploader.py "$directory"/results.txt
+        rm "$directory"/results.txt
     else
         exit 1
     fi

@@ -18,9 +18,11 @@ class Uploader:
     #   Constructor method of the class
     #   @params
     #       df: Dataframe - Dataframe returned from full_retrieval
+    #       cik: str - CIK used to identify the table that will be uploaded
     #
-    def __init__(self, df: pd.DataFrame):
+    def __init__(self, df: pd.DataFrame, cik: str):
         self.df = df
+        self.cik = cik
     
     #
     #   Pivots the input table and for each fiscal year it keeps the financial records
@@ -44,8 +46,8 @@ class Uploader:
         return table
     
     #
-    #
+    # Uploads the information to the cloud
     #
     def upload_(self)-> None:
-        pass
+        table = self.to_send_table_()
 

@@ -55,26 +55,36 @@ class TextUploader():
     #
     def get_full_url_(self):
         return [ self.source_url + self.scrutinize_(i) for i in self.urls]
+
+
+    #
+    #   Helper function to obtain the CIK from a sec.gov url
+    #   @params
+    #       url: str - URL of a .txt SEC filing
+    #
+    def get_cik_(self, url):
+        return url.split('/')[-2]
     
 
     #
     #   Obtains text files from (A) and stores them in the folder
-    #   @params
     #
     def get_filings_(self):
+        save_directory = 'tmp/text_data/'
         for url in self.get_full_url_():
             r = requests.get(url, headers=self.headers)
+            cik = self.get_cik_(url)
             try:
                 soup = BeautifulSoup(r.text, 'html.parser')
                 paragraphs = soup.find_all('p')
-                with open('filing.txt', 'w', encoding='utf-8') as file:
+                with open(save_directory + 'filing_{c}.txt'.format(c=cik), 'w', encoding='utf-8') as file:
                     for paragraph in paragraphs:
-                        file.write(paragraph.get_text() + '\n')  # Write the paragraph content with line breaks
-                break
+                        file.write(paragraph.get_text() + '\n')  
+                # break
             except:
-                with open('filing.txt', 'w', encoding='utf-8') as file:
+                with open(save_directory + 'filing_{c}.txt'.format(c=cik), 'w', encoding='utf-8') as file:
                     file.write(r.text)
-                break
+                # break
             time.sleep(10)
 
 

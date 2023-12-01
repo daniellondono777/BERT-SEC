@@ -112,7 +112,9 @@ class Worker:
             formated_us_gaap = self.format_fact_(retrieval,'us-gaap')
             formated_dei = self.format_fact_(retrieval,'dei')
             df = pd.concat([formated_dei, formated_us_gaap], axis=0)
-            return df[df['form'] == self.form]
+            ret = df[df['form'] == self.form]
+            print(ret)
+            return ret
         except:
             print('[*] Error performing full_retrieval_')
             return pd.DataFrame()

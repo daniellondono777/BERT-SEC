@@ -20,31 +20,29 @@ def main():
     companies = pd.DataFrame()
     cik_codes_json = ''
     try:
-        cik_codes_json = requests.get('https://www.sec.gov/files/company_tickers.json').json()
+        headers = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36' }
+        cik_codes_json = requests.get('https://www.sec.gov/files/company_tickers.json', headers=headers).json()
         companies = pd.DataFrame.from_dict(cik_codes_json.values())
     except:
         print('[*] Error Fetching CIK from sec.gov/files/company_tickers.json')
         exit(0)
-    
-    form = sys.argv[0]
-    # year = sys.argv[1]
 
-    ciks = companies.sample(10)['cik_str'].to_list() # We first try with 10 companies just for testing purposes, here you input the number you desire.  
+    form = "10-K" 
+
+    ciks = companies.sample(10)['cik_str'].to_list() # We first try with 100 companies just for testing purposes, here you input the number you desire.  
+
     for cik in ciks:
         instance_df = Worker(str(cik), 1, form).full_retrieval_()
-        uploader = Uploader(instance_df, cik)
-        uploader.upload_() # En este punto, se suben los financial statements TABULADOS
-                         # AHORA, cuando termine este ciclo, se llama al subprocess para que corra el textWorkerService.sh
-        time.sleep(10)
-    # for cik in ciks: 
-    # worker_instance = Worker(cik, form, year) .full_retrieval_
-    # Sleep for 10 seconds - I dont wanna mess with the SEC
-
-    # Then the same for the text_worker but we just get the year
-    # Here we check if the folder already exists in google drive, if it doesnt then we create it and upload it,
-    # else we upload it to its existing
+        if not instance_df.empty and instance_df.shape[0] > 0: # Also check that the filing does not exist in the folder tmp/filings
+            uploader = Uploader(instance_df, cik)
+            uploader.upload_()
+            time.sleep(10)
+    
+    # Here we'd run the same process for a text_worker instance
     
 
 
 if __name__ == '__main__':
     main()
+
+

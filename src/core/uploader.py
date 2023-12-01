@@ -8,9 +8,8 @@
 ##############################################################################################################################
 
 import pandas as pd
-from pydrive.auth import GoogleAuth 
-from pydrive.drive import GoogleDrive
-
+import subprocess
+import os
 
 class Uploader:
     
@@ -50,4 +49,21 @@ class Uploader:
     #
     def upload_(self)-> None:
         table = self.to_send_table_()
+        
+        # Uncomment these lines of code once you have configured your S3 bucket  
+
+        # output_folder = 'direct_uploads'
+        # output_filename = f'{self.cik}_10k_tabulated.csv'
+        # output_path = os.path.join(output_folder, output_filename)
+
+        # table.to_csv(output_path)
+
+        # shell_script_path = './src/service/s3Upload.sh' 
+        # args = [shell_script_path]
+        # subprocess.run(['bash', shell_script_path] + args)
+
+        # This is the code for saving the information LOCALLY
+        table.to_csv(os.path.join('tmp/filings', '{c}_filings'.format(c=str(self.cik))))
+
+
 

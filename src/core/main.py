@@ -14,6 +14,7 @@ import openpyxl
 import requests
 from worker import Worker
 from uploader import Uploader
+import os
 
 
 def main():
@@ -30,10 +31,11 @@ def main():
     form = "10-K" 
 
     ciks = companies.sample(10)['cik_str'].to_list() # We first try with 100 companies just for testing purposes, here you input the number you desire.  
-
+    
     for cik in ciks:
+        files = os.listdir('tmp/filings')
         instance_df = Worker(str(cik), 1, form).full_retrieval_()
-        if not instance_df.empty and instance_df.shape[0] > 0: # Also check that the filing does not exist in the folder tmp/filings
+        if not instance_df.empty and instance_df.shape[0] > 0 and '{}_filings.csv' not in files: # Also check that the filing does not exist in the folder tmp/filings
             uploader = Uploader(instance_df, cik)
             uploader.upload_()
             time.sleep(10)

@@ -30,8 +30,8 @@ def main():
 
     form = "10-K" 
 
-    ciks = companies.sample(10)['cik_str'].to_list() # We first try with 100 companies just for testing purposes, here you input the number you desire.  
-    
+    ciks = companies.sample(200)['cik_str'].to_list() # We first try with 100 companies just for testing purposes, here you input the number you desire.  
+
     for cik in ciks:
         files = os.listdir('tmp/filings')
         instance_df = Worker(str(cik), 1, form).full_retrieval_()

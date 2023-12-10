@@ -12,6 +12,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 import time
+import subprocess
 
 
 class TextUploader():
@@ -86,6 +87,10 @@ class TextUploader():
                     file.write(r.text)
                 # break
             time.sleep(10)
+
+        # shell_script_path = './src/service/s3Upload.sh' 
+        # args = [shell_script_path]
+        # subprocess.run(['bash', shell_script_path] + args)
 
 
 uploader = TextUploader(sys.argv[1])
